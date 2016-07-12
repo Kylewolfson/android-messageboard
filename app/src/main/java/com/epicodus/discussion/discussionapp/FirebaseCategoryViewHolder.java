@@ -43,7 +43,7 @@ public class FirebaseCategoryViewHolder extends RecyclerView.ViewHolder implemen
     @Override
     public void onClick(View view) {
         final ArrayList<Category> categories = new ArrayList<>();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("newCategory");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("newCategories");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
@@ -52,13 +52,13 @@ public class FirebaseCategoryViewHolder extends RecyclerView.ViewHolder implemen
                     categories.add(snapshot.getValue(Category.class));
                 }
 
-                int itemPosition = getLayoutPosition();
+//                int itemPosition = getLayoutPosition();
 
-                Intent intent = new Intent(mContext, MainActivity.class);
-                intent.putExtra("position", itemPosition + "");
-                intent.putExtra("categories", Parcels.wrap(categories));
-
-                mContext.startActivity(intent);
+//                Intent intent = new Intent(mContext, MainActivity.class);
+//                intent.putExtra("position", itemPosition + "");
+//                intent.putExtra("categories", Parcels.wrap(categories));
+//
+//                mContext.startActivity(intent);
             }
 
             @Override

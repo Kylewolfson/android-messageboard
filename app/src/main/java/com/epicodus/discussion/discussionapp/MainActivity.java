@@ -48,35 +48,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mAddCategoryReference = FirebaseDatabase.getInstance().getReference().child("newCategory");
+        mAddCategoryReference = FirebaseDatabase.getInstance().getReference("newCategories");
 
-        mCategoryReference = FirebaseDatabase.getInstance().getReference("newCategory");
+        mCategoryReference = FirebaseDatabase.getInstance().getReference("newCategories");
         setUpFirebaseAdapter();
-
-
-//        mAddCategoryReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
-//                    String category = categorySnapshot.getValue().toString();
-//                    Log.d("Categories updated", "Category: "+category);
-//                    categories.add(snapshot.getValue(Category.class));
-//                }
-//
-//                int itemPosition = getLayoutPosition();
-//
-//                Intent intent = new Intent(mContext, CategoryActivity.class);
-//                intent.putExtra("position", itemPosition + "");
-//                intent.putExtra("categories", Parcels.wrap(categories));
-//
-//                mContext.startActivity(intent);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
 
 
         mNewCategoryButton.setOnClickListener(this);
@@ -104,10 +79,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String newCategory = mEditCategoryText.getText().toString();
 
             saveCategoryToFirebase(newCategory);
-
-            Intent intent = new Intent(MainActivity.this, MainActivity.class);
-            intent.putExtra("newCategory", newCategory);
-            startActivity(intent);
         }
     }
     public void saveCategoryToFirebase(String newCategoryName) {
