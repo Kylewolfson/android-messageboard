@@ -3,6 +3,7 @@ package com.epicodus.discussion.discussionapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -13,11 +14,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -29,66 +33,70 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private DatabaseReference mAddCategoryReference;
-
-    private ValueEventListener mAddCategoryReferenceListener;
+    private DatabaseReference mCategoryReference;
+    private FirebaseRecyclerAdapter mFirebaseAdapter;
 
     @Bind(R.id.newCategoryButton) Button mNewCategoryButton;
     @Bind(R.id.editCategoryText) EditText mEditCategoryText;
-    @Bind(R.id.listView) ListView listView;
     @Bind(R.id.recyclerView)  RecyclerView mRecyclerView;
-
-
-    private String[] categories = new String[] {"Local", "News",
-            "Events", "Videogames", "Dating", "Food", "Advice", "Coding"};
-
-    private ListView mListView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        mAddCategoryReference = FirebaseDatabase.getInstance().getReference().child("newCategory");
-
-        mAddCategoryReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
-                    String category = categorySnapshot.getValue().toString();
-                    Log.d("Categories updated", "Category: "+category);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Intent intent = getIntent();
-        String category = intent.getStringExtra("category");
+        mAddCategoryReference = FirebaseDatabase.getInstance().getReference().child("newCategory");
 
-//        getCategories(category);
+        mCategoryReference = FirebaseDatabase.getInstance().getReference("newCategory");
+        setUpFirebaseAdapter();
 
 
-        mListView = (ListView) findViewById(R.id.listView);
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, categories);
-        mListView.setAdapter(adapter);
+//        mAddCategoryReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
+//                    String category = categorySnapshot.getValue().toString();
+//                    Log.d("Categories updated", "Category: "+category);
+//                    categories.add(snapshot.getValue(Category.class));
+//                }
+//
+//                int itemPosition = getLayoutPosition();
+//
+//                Intent intent = new Intent(mContext, CategoryActivity.class);
+//                intent.putExtra("position", itemPosition + "");
+//                intent.putExtra("categories", Parcels.wrap(categories));
+//
+//                mContext.startActivity(intent);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
+
         mNewCategoryButton.setOnClickListener(this);
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
-                intent.putExtra("category", ((TextView)view).getText().toString());
-                startActivity(intent);
-            }
-        });
     }
 
+    private void setUpFirebaseAdapter() {
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<Category, FirebaseCategoryViewHolder>
+                (Category.class, R.layout.category_list_view, FirebaseCategoryViewHolder.class,
+                        mCategoryReference) {
+
+            @Override
+            protected void populateViewHolder(FirebaseCategoryViewHolder viewHolder,
+                                              Category model, int position) {
+                viewHolder.bindCategory(model);
+            }
+        };
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mFirebaseAdapter);
+    }
 
     @Override
     public void onClick(View v) {
@@ -110,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mAddCategoryReference.removeEventListener(mAddCategoryReferenceListener);
+//        mAddCategoryReference.removeEventListener(mAddCategoryReferenceListener);
+        mFirebaseAdapter.cleanup();
     }
 }

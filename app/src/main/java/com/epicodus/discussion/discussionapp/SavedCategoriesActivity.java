@@ -26,17 +26,17 @@ public class SavedCategoriesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mCategoryReference = FirebaseDatabase.getInstance().getReference("NewCategory");
+        mCategoryReference = FirebaseDatabase.getInstance().getReference("newCategory");
         setUpFirebaseAdapter();
     }
 
     private void setUpFirebaseAdapter() {
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<Category, FirebaseRestaurantViewHolder>
-                (Category.class, R.layout.category_list_item, FirebaseRestaurantViewHolder.class,
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<Category, FirebaseCategoryViewHolder>
+                (Category.class, R.layout.category_list_view, FirebaseCategoryViewHolder.class,
                         mCategoryReference) {
 
             @Override
-            protected void populateViewHolder(FirebaseRestaurantViewHolder viewHolder,
+            protected void populateViewHolder(FirebaseCategoryViewHolder viewHolder,
                                               Category model, int position) {
                 viewHolder.bindCategory(model);
             }

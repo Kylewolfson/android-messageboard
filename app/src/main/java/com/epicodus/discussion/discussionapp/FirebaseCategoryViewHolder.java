@@ -19,14 +19,14 @@ import java.util.ArrayList;
 /**
  * Created by Guest on 7/11/16.
  */
-public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class FirebaseCategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private static final int MAX_WIDTH = 200;
     private static final int MAX_HEIGHT = 200;
 
     View mView;
     Context mContext;
 
-    public FirebaseRestaurantViewHolder(View itemView) {
+    public FirebaseCategoryViewHolder(View itemView) {
         super(itemView);
         mView = itemView;
         mContext = itemView.getContext();
@@ -35,14 +35,15 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implem
 
     public void bindCategory(Category category) {
 
-        TextView nameTextView = (TextView) mView.findViewById(R.id.nameTextView);
+        TextView categoryTextView = (TextView) mView.findViewById(R.id.categoryTextView);
 
+        categoryTextView.setText(category.getName());
     }
 
     @Override
     public void onClick(View view) {
         final ArrayList<Category> categories = new ArrayList<>();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("NewCategory");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("newCategory");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
@@ -55,7 +56,7 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implem
 
                 Intent intent = new Intent(mContext, MainActivity.class);
                 intent.putExtra("position", itemPosition + "");
-                intent.putExtra("restaurants", Parcels.wrap(categories));
+                intent.putExtra("categories", Parcels.wrap(categories));
 
                 mContext.startActivity(intent);
             }
