@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="108dp"
             android:layout_height="wrap_content"
-            android:text="One Category"
+            android:text="One Message"
             android:id="@+id/messageTextView"
             android:layout_below="@+id/nameTextView"
             android:textColor="#ffffff"
