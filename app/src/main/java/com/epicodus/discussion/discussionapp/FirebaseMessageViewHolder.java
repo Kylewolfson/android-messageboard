@@ -2,6 +2,8 @@ package com.epicodus.discussion.discussionapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.*;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -16,49 +18,46 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-/**
- * Created by Guest on 7/11/16.
- */
-public class FirebaseCategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class FirebaseMessageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private static final int MAX_WIDTH = 200;
     private static final int MAX_HEIGHT = 200;
 
     View mView;
     Context mContext;
 
-    public FirebaseCategoryViewHolder(View itemView) {
+    public FirebaseMessageViewHolder(View itemView) {
         super(itemView);
         mView = itemView;
         mContext = itemView.getContext();
         itemView.setOnClickListener(this);
     }
 
-    public void bindCategory(Category category) {
+    public void bindMessage(Message message) {
 
-        TextView categoryTextView = (TextView) mView.findViewById(R.id.categoryTextView);
+        TextView messageTextView = (TextView) mView.findViewById(R.id.messageTextView);
 
-        categoryTextView.setText(category.getName());
+        messageTextView.setText(message.getName());
     }
 
     @Override
     public void onClick(View view) {
-        final ArrayList<Category> categories = new ArrayList<>();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("newCategories");
+        final ArrayList<Message> categories = new ArrayList<>();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("messages");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    categories.add(snapshot.getValue(Category.class));
+                    categories.add(snapshot.getValue(Message.class));
                 }
 
                 int itemPosition = getLayoutPosition();
 
-                Intent intent = new Intent(mContext, CategoryActivity.class);
-                intent.putExtra("position", itemPosition + "");
-                intent.putExtra("categories", Parcels.wrap(categories));
+//                Intent intent = new Intent(mContext, MessageActivity.class);
+//                intent.putExtra("position", itemPosition + "");
+//                intent.putExtra("categories", Parcels.wrap(categories));
 
-                mContext.startActivity(intent);
+//                mContext.startActivity(intent);
             }
 
             @Override

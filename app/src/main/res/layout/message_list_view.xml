@@ -14,7 +14,7 @@
             android:layout_width="108dp"
             android:layout_height="wrap_content"
             android:text="One Category"
-            android:id="@+id/categoryTextView"
+            android:id="@+id/messageTextView"
             android:layout_below="@+id/nameTextView"
             android:textColor="#ffffff"
             android:layout_alignParentBottom="true"

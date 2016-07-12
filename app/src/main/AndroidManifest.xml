@@ -19,6 +19,8 @@
         </activity>
         <activity android:name=".CategoryActivity" />
         <activity android:name=".SavedCategoriesActivity" />
+        <activity android:name=".FirebaseMessageViewHolder" />
+        <activity android:name=".MessageActivity"></activity>
     </application>
 
 </manifest>
